@@ -11,176 +11,182 @@ window.onload = function() {
 		height = canvas.height = window.innerHeight;
 		var count = 0;
 
-	var points = [],
+	var keypoint = [],
 		limbs = [];
-		//grav
+		//gravity
 		grav = 0.25,
 		//how "springy" the ragdoll is in terms of bouncing from the walls
-		//changing this value to over 1.5 "breaks" our ragdoll :(
+		//changing this value to over 1.5 twists and breaks our ragdoll :(
 		rebound = .85,
 		//coefficient of friction
 		//decreasing the value to under .9 causes the ragdoll to slow down due to vertical friction on the walls
 		coefff = 0.99;
 
-		//points represent the connecting points between the lines that construct the body
-		//some of the points will therefore act as the joints in our ragdoll
+		//keypoints represent the connecting keypoint between the lines that construct the body
+		//some of the keypoint will therefore act as the joints in our ragdoll
 		//randomizing initial velocity
-	points.push({
+		
+		//the parameter "pinned" has been added to some of the keypoints to exclude them from updating and thus
+		//keeping them stationary
+		
+		
+	keypoint.push({
 		x: 120,
 		y: 100,
-		oldx: 100 + Math.random() * 50,
-		oldy: 100
+		OldX: 100 + Math.random() * 50,
+		OldY: 100
 	});
-	points.push({
+	keypoint.push({
 		x: 180,
 		y: 100,
-		oldx: 210,
-		oldy: 100
+		OldX: 210,
+		OldY: 100
 	});
-	points.push({
+	keypoint.push({
 		x: 200,
 		y: 300,
-		oldx: 200,
-		oldy: 300
+		OldX: 200,
+		OldY: 300
 	});
-	points.push({
+	keypoint.push({
 		x: 100,
 		y: 300,
-		oldx: 100,
-		oldy: 300
+		OldX: 100,
+		OldY: 300
 	});
 	
 	// ARMS--------------------------------------------------------------------------------------------
-	points.push({
+	keypoint.push({
 		x: 10,
 		y: 170,
-		oldx: 10,
-		oldy: 170
+		OldX: 10,
+		OldY: 170
 	});
-	points.push({
+	keypoint.push({
 		x: 290,
 		y: 170,
-		oldx: 290,
-		oldy: 170
+		OldX: 290,
+		OldY: 170
 	});
 	
 	// LEGS--------------------------------------------------------------------------------------------
-	points.push({
+	keypoint.push({
 		x: 70,
 		y: 400,
-		oldx: 70,
-		oldy: 400
+		OldX: 70,
+		OldY: 400
 	});
-	points.push({
+	keypoint.push({
 		x: 230,
 		y: 400,
-		oldx: 230,
-		oldy: 400
+		OldX: 230,
+		OldY: 400
 	});
 	
 	// FOREARMS----------------------------------------------------------------------------------------
-	points.push({
+	keypoint.push({
 		x: 10,
 		y: 230,
-		oldx: 10,
-		oldy: 230
+		OldX: 10,
+		OldY: 230
 	});
-	points.push({
+	keypoint.push({
 		x: 290,
 		y: 230,
-		oldx: 290,
-		oldy: 230
+		OldX: 290,
+		OldY: 230
 	});
 	
 	//KNEE--------------------------------------------------------------------------------------------
-	points.push({
+	keypoint.push({
 		x: 70,
 		y: 500,
-		oldx: 70,
-		oldy: 500
+		OldX: 70,
+		OldY: 500
 	});
-	points.push({
+	keypoint.push({
 		x: 230,
 		y: 500,
-		oldx: 230,
-		oldy: 500
+		OldX: 230,
+		OldY: 500
 	});
-	points.push({
+	keypoint.push({
 		x: 230,
 		y: 200,
-		oldx: 230,
-		oldy: 200,
+		OldX: 230,
+		OldY: 200,
 		pinned: true
 	});
-	points.push({
+	keypoint.push({
 		x: 330,
 		y: 300,
-		oldx: 330,
-		oldy: 300,
+		OldX: 330,
+		OldY: 300,
 		pinned: true
 	});
 	
 	//WALL--------------------------------------------------------------------------------------------
-	points.push({
-		x: 250,
-		y: 400,
-		oldx: 250,
-		oldy: 400,
+	keypoint.push({
+		x: 300,
+		y: 500,
+		OldX: 300,
+		OldY: 500,
 		pinned: true
 	});
-	points.push({
-		x: 250,
+	keypoint.push({
+		x: 300,
 		y: 0,
-		oldx: 250,
-		oldy: 0,
+		OldX: 300,
+		OldY: 0,
 		pinned: true
 	});
+	
 
 	//lines used to connect the dots, and give our ragdoll its shape
 	//invisible lines are used to prevent the body from collapsing into itself
 	//those are set to visible: false
 	
 	limbs.push({
-		p0: points[0],
-		p1: points[1],
-		length: distance(points[0], points[1]),
+		p0: keypoint[0],
+		p1: keypoint[1],
+		length: distance(keypoint[0], keypoint[1]),
 		visible: true
 	});
 	limbs.push({
-		p0: points[1],
-		p1: points[2],
-		length: distance(points[1], points[2]),
+		p0: keypoint[1],
+		p1: keypoint[2],
+		length: distance(keypoint[1], keypoint[2]),
 		visible: true
 	});
 	limbs.push({
-		p0: points[2],
-		p1: points[3],
-		length: distance(points[2], points[3]),
+		p0: keypoint[2],
+		p1: keypoint[3],
+		length: distance(keypoint[2], keypoint[3]),
 		visible: true
 	});
 	limbs.push({
-		p0: points[3],
-		p1: points[0],
-		length: distance(points[3], points[0]),
+		p0: keypoint[3],
+		p1: keypoint[0],
+		length: distance(keypoint[3], keypoint[0]),
 		visible: true
 	});
 	limbs.push({
-		p0: points[0],
-		p1: points[2],
-		length: distance(points[0], points[2]),
+		p0: keypoint[0],
+		p1: keypoint[2],
+		length: distance(keypoint[0], keypoint[2]),
 		visible: false
 	});
 	// arms
 	limbs.push({
-		p0: points[0],
-		p1: points[4],
-		length: distance(points[0], points[4]),
+		p0: keypoint[0],
+		p1: keypoint[4],
+		length: distance(keypoint[0], keypoint[4]),
 		visible: true
 	});
 	limbs.push({
-		p0: points[1],
-		p1: points[5],
-		length: distance(points[1], points[5]),
+		p0: keypoint[1],
+		p1: keypoint[5],
+		length: distance(keypoint[1], keypoint[5]),
 		visible: true
 	});
 	
@@ -190,42 +196,43 @@ window.onload = function() {
 	
 	//left
 	limbs.push({
-		p0: points[3],
-		p1: points[6],
-		length: distance(points[3], points[6]),
+		p0: keypoint[3],
+		p1: keypoint[6],
+		length: distance(keypoint[3], keypoint[6]),
 		visible: true
 	});
 	limbs.push({
-		p0: points[6],
-		p1: points[10],
-		length: distance(points[6], points[10]),
+		p0: keypoint[6],
+		p1: keypoint[10],
+		length: distance(keypoint[6], keypoint[10]),
 		visible: true
 	});
 	limbs.push({
-		p0: points[6],
-		p1: points[2],
-		length: distance(points[6], points[2]),
+		p0: keypoint[6],
+		p1: keypoint[2],
+		length: distance(keypoint[6], keypoint[2]),
 		visible: false
 	});
 	
+	
 	//right
 	limbs.push({
-		p0: points[2],
-		p1: points[7],
-		length: distance(points[2], points[7]),
+		p0: keypoint[2],
+		p1: keypoint[7],
+		length: distance(keypoint[2], keypoint[7]),
 		visible: true
 	});
 	limbs.push({
-		p0: points[7],
-		p1: points[11],
-		length: distance(points[7], points[11]),
+		p0: keypoint[7],
+		p1: keypoint[11],
+		length: distance(keypoint[7], keypoint[11]),
 		visible: true
 	});
 
 	limbs.push({
-		p0: points[7],
-		p1: points[3],
-		length: distance(points[7], points[3]),
+		p0: keypoint[7],
+		p1: keypoint[3],
+		length: distance(keypoint[7], keypoint[3]),
 		visible: false
 	});
 
@@ -234,17 +241,18 @@ window.onload = function() {
 	
 	//left
 	limbs.push({
-		p0: points[4],
-		p1: points[8],
-		length: distance(points[4], points[8]),
+		p0: keypoint[4],
+		p1: keypoint[8],
+		length: distance(keypoint[4], keypoint[8]),
 		visible: true
 	});
 	
+	
 	//right
 	limbs.push({
-		p0: points[5],
-		p1: points[9],
-		length: distance(points[5], points[9]),
+		p0: keypoint[5],
+		p1: keypoint[9],
+		length: distance(keypoint[5], keypoint[9]),
 		visible: true
 	});
 	
@@ -252,13 +260,18 @@ window.onload = function() {
 	//WALL--------------------------------------------------------------------------------------------
 	
 	limbs.push({
-		p0: points[14],
-		p1: points[15],
-		length: distance(points[14], points[15]),
+		p0: keypoint[14],
+		p1: keypoint[15],
+		length: distance(keypoint[14], keypoint[15]),
 		visible: true
 	});
-
-	//finding the distance between any two points by simply rooting the sum of the squares
+		
+	
+	
+	
+	
+	//DISTANCE CALCULATION----------------------------------------------------------------------------
+	//finding the distance between any two keypoint by simply rooting the sum of the squares
 	function distance(p0, p1) {
 		
 		var dx = p1.x - p0.x,
@@ -267,33 +280,39 @@ window.onload = function() {
 		return Math.sqrt(dx * dx + dy * dy);
 	}
 
-	//-----------------------------------------------------------------------------------------------------------
-	//UPDATE
+	
+	//UPDATE------------------------------------------------------------------------------------------
 	
 	update();
 
 	function update() {
-		updatePoints();
-		//note that the points are being updated twice per frame
+		updatekeypoint();
+		//note that the keypoint are being updated twice per frame
+		//this can have an impact on the performance in the case of multiple calculations but usually does not influence
+		//it as much
 		for(var i = 0; i < 2; i++) {
 			updatelimbs();
-			constrainPoints();
+			constrainkeypoint();
 		}
 		render();
 		requestAnimationFrame(update);
 	}
 	
-	function updatePoints() {
-		for(var i = 0; i < points.length; i++) {
-			var p = points[i], vx, vy
+	function updatekeypoint() {
+		for(var i = 0; i < keypoint.length; i++) {
+			var p = keypoint[i], NewX, NewY
 			if(!p.pinned){
 				//calculating velocity and updating it by setting the variables correctly
-					vx = (p.x - p.oldx) * coefff;
-					vy = (p.y - p.oldy) * coefff;
-				p.oldx = p.x;
-				p.oldy = p.y;
-				p.x += vx;
-				p.y += vy;
+					NewX = (p.x - p.OldX) * coefff;
+					NewY = (p.y - p.OldY) * coefff;
+				
+				//setting the current position as the old position
+				p.OldX = p.x;
+				p.OldY = p.y;
+				//updating position based on velocity
+				p.x += NewX;
+				p.y += NewY;
+				//taking into account the gravity factor
 				p.y += grav;
 			}
 		}
@@ -304,34 +323,34 @@ window.onload = function() {
 	//used not only to prevent the ragdoll from falling off the screen but also for creating a "tunnel" through which it 
 	//initially falls in the scene. This is done by inversing its velocity
 	
-	function constrainPoints() {
+	function constrainkeypoint() {
 
-		for(var i = 0; i < points.length; i++) {
-			var p = points[i];
+		for(var i = 0; i < keypoint.length; i++) {
+			var p = keypoint[i];
 			if(!p.pinned){
 				
 				//screen border-----------------------------------------------------------------------------
 				if(p.x > width) {
 					p.x = width;
-					p.oldx = p.x + (p.x - p.oldx) * rebound;
+					p.OldX = p.x + (p.x - p.OldX) * rebound;
 				}
 				else if(p.x < 0) {
 					p.x = 0;
-					p.oldx = p.x + (p.x - p.oldx) * rebound;
+					p.OldX = p.x + (p.x - p.OldX) * rebound;
 				}
 				if(p.y > height) {
 					p.y = height;
-					p.oldy = p.y + (p.y - p.oldy) * rebound;
+					p.OldY = p.y + (p.y - p.OldY) * rebound;
 				}
 				if(p.y < 0) {
 					p.y = 0;
-					p.oldy = p.y + (p.y - p.oldy) * rebound;
+					p.OldY = p.y + (p.y - p.OldY) * rebound;
 				}
 				
 				//"tunnel"-----------------------------------------------------------------------------------
-				if((p.y < 400) && (p.x > 250)) {
-					(p.y < 400) && (p.x > 250);
-					p.oldy = p.y + (p.y - p.oldy) * rebound;
+				if((p.y < 500) && (p.x > 300)) {
+					(p.y < 500) && (p.x > 300);
+					p.OldX = p.x + (p.x - p.OldX) * rebound;
 				}
 			}
 		}
@@ -352,14 +371,14 @@ window.onload = function() {
 				midy = s.p0.y + dy / 2,
 				
 				//calculating the offset
-				offsetx = dx / 2 * ratio,
-				offsety = dy / 2 * ratio;
+				OffsetX = dx / 2 * ratio,
+				OffsetY = dy / 2 * ratio;
 			
 			//subtracting and adding offsets
-			s.p0.x = midx - offsetx;
-			s.p0.y = midy - offsety;
-			s.p1.x = midx + offsetx;
-			s.p1.y = midy + offsety;
+			s.p0.x = midx - OffsetX;
+			s.p0.y = midy - OffsetY;
+			s.p1.x = midx + OffsetX;
+			s.p1.y = midy + OffsetY;
 	
 		}
 	}
